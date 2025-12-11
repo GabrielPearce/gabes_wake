@@ -25,31 +25,44 @@ class CfgPatches {
 };
 
 class CfgFunctions {
-    // === Cardiac Arrest overrides (NEW) ===
+    // === Cardiac Arrest overrides ===
     class overwrite_ace_medical_status {
-        tag = "ace_medical_status";  // must match ACE tag
+        tag = "ace_medical_status";
         class ace_medical_status {
-            // keep your hasStableVitals override
+            // override stable vitals to allow low blood with a random chance
             class hasStableVitals {
                 file = "\gabes_wake\functions\fnc_hasStableVitals.sqf";
             };
-            // NEW: never allow CA to be set
+            // block entering cardiac arrest and force unconscious instead
             class setCardiacArrest {
                 file = "\gabes_wake\functions\fnc_setCardiacArrest.sqf";
             };
-            // NEW: always report "not in CA"
+            // always report that no unit is in cardiac arrest
             class isInCardiacArrest {
                 file = "\gabes_wake\functions\fnc_isInCardiacArrest.sqf";
             };
         };
     };
 
-    // === Your existing unconscious tick override ===
+    // === Override state machine to remove cardiac arrest ===
     class overwrite_ace_medicalstatemachine {
         tag = "ace_medical_statemachine";
         class ace_medical_statemachine {
+            // shorter wake‑up interval and clear cardiac arrest flag
             class handleStateUnconscious {
                 file = "\gabes_wake\functions\fnc_5seconds.sqf";
+            };
+            // redirect cardiac arrest handling to unconscious handler
+            class handleStateCardiacArrest {
+                file = "\gabes_wake\functions\fnc_handleStateCardiacArrest.sqf";
+            };
+            // when entering cardiac arrest, treat as entering unconscious
+            class enteredStateCardiacArrest {
+                file = "\gabes_wake\functions\fnc_enteredStateCardiacArrest.sqf";
+            };
+            // disable cardiac arrest death timer
+            class conditionCardiacArrestTimer {
+                file = "\gabes_wake\functions\fnc_conditionCardiacArrestTimer.sqf";
             };
         };
     };
