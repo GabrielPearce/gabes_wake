@@ -1,5 +1,6 @@
 #include "BIS_AddonInfo.hpp"
 
+
 class CfgPatches {
     class my_mod {
         units[] = {};
@@ -63,6 +64,35 @@ class CfgFunctions {
             // disable cardiac arrest death timer
             class conditionCardiacArrestTimer {
                 file = "\gabes_wake\functions\fnc_conditionCardiacArrestTimer.sqf";
+            };
+
+        };
+    };
+
+    // === Override ACE medical functions ===
+    class overwrite_ace_medical {
+        tag = "ace_medical";
+        class ace_medical {
+            // Apply a global minimum unconscious time of 3 seconds and
+            // adjust the lastWakeUpCheck timestamp accordingly
+            class setUnconscious {
+                file = "\gabes_wake\functions\fnc_setUnconscious.sqf";
+            };
+        };
+    };
+
+    // === Local functions for animation and event handling ===
+    class gabes_wake_internal {
+        tag = "gabes";
+        class functions {
+            // Event handler for when a unit wakes up; fixes stuck animations
+            class onWakeUp {
+                file = "\gabes_wake\functions\fnc_onWakeUp.sqf";
+            };
+            // Post-init to register the wake‑up event handler
+            class postInit {
+                file = "\gabes_wake\functions\fnc_postInit.sqf";
+                postInit = 1;
             };
         };
     };
